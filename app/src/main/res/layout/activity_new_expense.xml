@@ -42,6 +42,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColorHint="@color/black"
+                        android:text="@{newExpenseViewModel.expense.account.name}"
                         android:hint="Seleccione una cuenta " />
 
                     <ImageView
@@ -69,6 +70,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColorHint="@color/black"
+                        android:text="@{newExpenseViewModel.expense.category.name}"
                         android:hint="Seleccione una Categoria " />
 
                     <ImageView
@@ -95,6 +97,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColorHint="@color/black"
+                        android:text="@{newExpenseViewModel.expense.provider.name}"
                         android:hint="Seleccione un proveedor " />
 
                     <ImageView
@@ -121,6 +124,7 @@
                         android:inputType="number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@={newExpenseViewModel.amount}"
                         android:hint="Monto " />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -128,6 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
+                    android:text="@{newExpenseViewModel.expense.account.currency.symbol}"
                     tools:text="ARS" />
             </LinearLayout>
 
@@ -138,6 +143,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtDescription"
+                        android:text="@={newExpenseViewModel.description}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Descripcion " />
@@ -152,6 +158,7 @@
                         android:id="@+id/txtQuantity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@{newExpenseViewModel.quantity}"
                         android:inputType="number"
                         android:hint="Cantidad " />
                 </com.google.android.material.textfield.TextInputLayout>

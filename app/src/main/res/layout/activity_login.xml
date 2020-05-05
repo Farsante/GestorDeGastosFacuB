@@ -110,7 +110,7 @@
                 android:paddingStart="40dp"
                 android:background="@color/lightGreen"
                 android:textColor="@color/white"
-                android:text="@string/btnSesion" />
+                android:text="Iniciar Sesion" />
             </LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

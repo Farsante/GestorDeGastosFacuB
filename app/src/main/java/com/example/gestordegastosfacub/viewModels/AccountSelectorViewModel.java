@@ -21,6 +21,7 @@ public class AccountSelectorViewModel extends ViewModel {
         accounts.getValue().add(new Account("2","Caja grande",new Currency("ARS - Pesos")));
         accounts.getValue().add(new Account("3","Caja fuerte",new Currency("ARS - Pesos")));
         accounts.getValue().add(new Account("4","Caja en dolares",new Currency("USD - DOLARES")));
+        accounts.getValue().add(new Account("5","caja de reserva",new Currency("ARS - peso")));
     }
 
 }

@@ -39,8 +39,8 @@ public class ExpensesAdapter extends RecyclerView.Adapter<ExpensesAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position){
         final Expense expense = expenses.get(position);
         holder.txtDate.setText(expense.getDate());
-        holder.txtAccount.setText(expense.getAccount());
-        holder.txtCategory.setText(expense.getProvider());
+        holder.txtAccount.setText(expense.getAccount().getName());
+        holder.txtCategory.setText(expense.getProvider().getName());
         holder.txtAmount.setText(expense.getAmount());
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -49,8 +49,11 @@ public class ExpensesAdapter extends RecyclerView.Adapter<ExpensesAdapter.ViewHo
             }
         });
     }
+
     @Override
-    public int getItemCount(){ return expenses.size(); }
+    public int getItemCount() {
+        return expenses.size();
+    }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txtDate, txtAccount, txtAmount,txtCategory;

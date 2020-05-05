@@ -1,6 +1,8 @@
 package com.example.gestordegastosfacub.models;
 
-public class Currency {
+import java.io.Serializable;
+
+public class Currency implements Serializable {
     private String id;
     private String name;
     private String Symbol;
