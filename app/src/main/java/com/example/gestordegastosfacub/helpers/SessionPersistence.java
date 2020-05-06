@@ -33,7 +33,7 @@ public class SessionPersistence {
     public static void saveExpenses(Expense expense){
         ArrayList<Expense> expenses = getSavedExpenses();
         expenses.add(expense);
-        Paper.book().write("expenses",expenses);
+        Paper.book().write("expenses ",expenses);
     }
     public static ArrayList<Expense> getSavedExpenses(){
         if(!Paper.book().contains("expenses")){

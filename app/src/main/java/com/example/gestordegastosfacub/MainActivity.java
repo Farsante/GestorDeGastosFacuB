@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.gestordegastosfacub.network.RestClient;
+
 import io.paperdb.Paper;
 
 public class MainActivity extends Application {
@@ -17,7 +19,7 @@ public class MainActivity extends Application {
     public void onCreate() {
         super.onCreate();
         Paper.init(this);
-
+        RestClient.init();
     }
 
 }

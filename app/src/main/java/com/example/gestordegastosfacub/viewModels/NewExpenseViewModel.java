@@ -63,7 +63,7 @@ public class NewExpenseViewModel extends ViewModel {
     }
 
     public MutableLiveData<Expense> getExpense(){
-        if (expense.getValue()==null) expense.setValue(new Expense());
+        if (expense.getValue()==null) expense.setValue(new Expense() );
         return expense;
     }
 

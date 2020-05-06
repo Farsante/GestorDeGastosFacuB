@@ -174,7 +174,13 @@ public class NewExpenseActivity extends AppCompatActivity implements AccountSele
             removeFragment();
         }
 
-
+        @Override
+        public void onCategorySelected(Category category) {
+            Expense expense = viewModel.getExpense().getValue();
+            expense.setCategory(category);
+            viewModel.getExpense().setValue(expense);
+            removeFragment();
+        }
 
         @Override
         public void onProviderSelected(Provider provider) {
@@ -183,15 +189,6 @@ public class NewExpenseActivity extends AppCompatActivity implements AccountSele
             viewModel.getExpense().setValue(expense);
             removeFragment();
         }
-
-
-    @Override
-    public void onCategorySelected(Category category) {
-        Expense expense = viewModel.getExpense().getValue();
-        expense.setCategory(category);
-        viewModel.getExpense().setValue(expense);
-        removeFragment();
-    }
 }
 
 
