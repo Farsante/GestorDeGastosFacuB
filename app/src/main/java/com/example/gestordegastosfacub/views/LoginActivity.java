@@ -20,6 +20,7 @@ import com.example.gestordegastosfacub.R;
 import com.example.gestordegastosfacub.databinding.ActivityLoginBinding;
 import com.example.gestordegastosfacub.helpers.SessionPersistence;
 import com.example.gestordegastosfacub.models.User;
+import com.example.gestordegastosfacub.repositories.LoginRepository;
 import com.example.gestordegastosfacub.viewModels.LoginViewModel;
 
 import java.util.Observable;
@@ -86,9 +87,21 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (validateField()) {
-                    viewModel.saveUser();
-                    goToHomeActivity();
+                    viewModel.makeLogin();
+
                 }
+            }
+        });
+        viewModel.getOnLoginSuccessData().observe(this, new Observer<LoginRepository.OnLoginSuccess>() {
+            @Override
+            public void onChanged(LoginRepository.OnLoginSuccess onLoginSuccess) {
+                goToHomeActivity();
+            }
+        });
+        viewModel.getOnLoginFailData().observe(this, new Observer<LoginRepository.OnLoginFail>() {
+            @Override
+            public void onChanged(LoginRepository.OnLoginFail onLoginFail) {
+                Toast.makeText(LoginActivity.this, onLoginFail.getError(), Toast.LENGTH_SHORT).show();
             }
         });
     }
