@@ -2,6 +2,7 @@
 <layout>
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="loginViewModel"
             type="com.example.gestordegastosfacub.viewModels.LoginViewModel" />
@@ -113,6 +114,10 @@
                 android:text="Iniciar Sesion" />
             </LinearLayout>
         </ScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <include
+            android:id="@+id/layoutOverlay"
+            layout="@layout/layout_overlay"
+            android:visibility="@{loginViewModel.showOverlay?View.VISIBLE:View.GONE}"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

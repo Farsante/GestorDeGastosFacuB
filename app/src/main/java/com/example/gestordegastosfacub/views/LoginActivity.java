@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
             binding = DataBindingUtil.setContentView(this,R.layout.activity_login);
             viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
             binding.setLoginViewModel(viewModel);
+            binding.setLifecycleOwner(this);
             setupObservers();
         }
 

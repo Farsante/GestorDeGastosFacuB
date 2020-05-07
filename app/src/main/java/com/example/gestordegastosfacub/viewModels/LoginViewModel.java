@@ -41,12 +41,12 @@ public class LoginViewModel extends ViewModel {
     private void setupObserver() {
      getLoginRepository().getOnLoginSuccess().subscribe(onLoginSuccess -> {
          getOnLoginSuccessData().setValue(onLoginSuccess);
-         //getShowOverlay().setValue(false);
+         getShowOverlay().setValue(false);
      });
 
         getLoginRepository().getOnLoginFail().subscribe(onLoginFail -> {
             getOnLoginFailData().setValue(onLoginFail);
-          //  getShowOverlay().setValue(false);
+          getShowOverlay().setValue(false);
         });
     }
 

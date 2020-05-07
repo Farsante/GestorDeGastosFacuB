@@ -6,6 +6,10 @@ import com.example.gestordegastosfacub.network.RestClient;
 import com.example.gestordegastosfacub.network.responses.LoginResponse;
 
 import io.reactivex.Emitter;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,7 +30,11 @@ public class LoginRepository {
     public void saveUser(User user){ SessionPersistence.saveUser(user); }
 
     public void makeLoginToServer(String username,String password){
-        RestClient.getApiService().makeLogin(username,password).enqueue(new Callback<LoginResponse>() {
+        RestClient.getApiService().makeLogin(username,password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(makeLoginObserver());
+                /*.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()){
@@ -41,8 +49,22 @@ public class LoginRepository {
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 getOnLoginFail().onNext(new OnLoginFail("ha ocurrido un error, lo sentimos "));
             }
-        });
+        });*/
+    }
 
+    public DisposableSingleObserver<LoginResponse> makeLoginObserver(){
+        return new DisposableSingleObserver<LoginResponse>() {
+            @Override
+            public void onSuccess(LoginResponse loginResponse) {
+                saveUser(loginResponse.getUser());
+                getOnLoginSuccess().onNext(new OnLoginSuccess(loginResponse));
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                getOnLoginFail().onNext(new OnLoginFail("Ha ocurrido un error"));
+            }
+        };
     }
 
     public class OnLoginSuccess {
