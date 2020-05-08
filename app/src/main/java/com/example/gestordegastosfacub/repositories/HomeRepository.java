@@ -34,14 +34,22 @@ public class HomeRepository {
         return new DisposableSingleObserver<ArrayList<Expense>>() {
             @Override
             public void onSuccess(ArrayList<Expense> expenses) {
-
+               getOnGetExpensesSuccess().onNext(new OnGetExpensesSuccess(expenses));
             }
 
             @Override
             public void onError(Throwable e) {
-
+                getOnGetExpensesFail().onNext(new OnGetExpensesFail("Ha ocurrido un error! "));
             }
         };
+    }
+
+    public PublishSubject<OnGetExpensesSuccess> getOnGetExpensesSuccess() {
+        return onGetExpensesSuccess;
+    }
+
+    public PublishSubject<OnGetExpensesFail> getOnGetExpensesFail() {
+        return onGetExpensesFail;
     }
 
     public class OnGetExpensesSuccess{

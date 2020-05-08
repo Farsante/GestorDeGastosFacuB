@@ -15,11 +15,30 @@ public class HomeViewModel extends ViewModel {
     private MutableLiveData<String> userName = new MutableLiveData<>();
     private MutableLiveData<Boolean> butonNewExpense = new MutableLiveData<>();
     private HomeRepository homeRepository;
+    private MutableLiveData<HomeRepository.OnGetExpensesFail>onGetExpensesFailData = new MutableLiveData<>();
+
+
+    public MutableLiveData<HomeRepository.OnGetExpensesFail> getOnGetExpensesFailData() {
+        return onGetExpensesFailData;
+    }
 
     public HomeRepository getHomeRepository(){
-        if (homeRepository == null) homeRepository = new HomeRepository();
+        if (homeRepository == null) {
+            homeRepository = new HomeRepository();
+            setupObservers();
+        }
         return homeRepository;
     }
+
+    private void setupObservers() {
+        getHomeRepository().getOnGetExpensesSuccess().subscribe(onGetExpensesSuccess ->{
+                getExpenses().setValue(onGetExpensesSuccess.getExpenses());
+        });
+        getHomeRepository().getOnGetExpensesFail().subscribe(onGetExpensesFail -> {
+            getOnGetExpensesFailData().setValue(onGetExpensesFail);
+        });
+    }
+
 
     public MutableLiveData<ArrayList<Expense>> getExpenses() { return expenses; }
 
@@ -37,7 +56,9 @@ public class HomeViewModel extends ViewModel {
 
     public void setupUserInfo(){
         User user = getHomeRepository().getUser();
-        getUserName().setValue(user.getUsername());
-    }
+        getUserName().setValue("¡"+user.getName()+"!");    }
 
+    public void getExpensesFromServer() {
+        getHomeRepository().getExpensesFromServer();
+    }
 }
