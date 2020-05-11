@@ -8,6 +8,8 @@ import com.example.gestordegastosfacub.models.Category;
 import com.example.gestordegastosfacub.models.Expense;
 import com.example.gestordegastosfacub.models.Provider;
 import com.example.gestordegastosfacub.network.RestClient;
+import com.example.gestordegastosfacub.network.requests.CreateExpenseRequest;
+import com.example.gestordegastosfacub.network.responses.CreateExpenseResponse;
 import com.example.gestordegastosfacub.network.responses.LoginResponse;
 import com.google.gson.Gson;
 
@@ -30,6 +32,17 @@ public class NewExpenseRepository {
     private PublishSubject<OnGetCategoryFail> onGetCategoriesFailData = PublishSubject.create();
     private PublishSubject<OnGetProvidersSuccess> onGetProvidersSuccessData = PublishSubject.create();
     private PublishSubject<OnGetProvidersFail> onGetProvidersFailData = PublishSubject.create();
+    private PublishSubject<OnCreateExpenseSuccess>  onCreateExpenseSuccessData = PublishSubject.create();
+    private PublishSubject<OnCreateExpenseFail> onCreateExpenseFailData = PublishSubject.create();
+
+
+    public PublishSubject<OnCreateExpenseSuccess> getOnCreateExpenseSuccessData() {
+        return onCreateExpenseSuccessData;
+    }
+
+    public PublishSubject<OnCreateExpenseFail> getOnCreateExpenseFailData() {
+        return onCreateExpenseFailData;
+    }
 
     public PublishSubject<OnGetAccountsSuccess> getOnGetAccountsSuccessData() {
         return onGetAccountsSuccessData;
@@ -111,6 +124,27 @@ public class NewExpenseRepository {
                         getOnGetProvidersFailData().onNext(new OnGetProvidersFail(ex.getMessage()));
                     }
                 }
+            }
+        };
+    }
+
+    public void createExpense(CreateExpenseRequest createExpenseRequest){
+        RestClient.getApiService().createNewExpense(createExpenseRequest)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(createExpenseObserver());
+    }
+
+    public DisposableSingleObserver<CreateExpenseResponse> createExpenseObserver() {
+        return new DisposableSingleObserver<CreateExpenseResponse>() {
+            @Override
+            public void onSuccess(CreateExpenseResponse createExpenseResponse) {
+                getOnCreateExpenseSuccessData().onNext(new OnCreateExpenseSuccess(createExpenseResponse));
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                getOnCreateExpenseFailData().onNext(new OnCreateExpenseFail("error"));
             }
         };
     }
@@ -221,5 +255,25 @@ public class NewExpenseRepository {
             return error;
         }
     }
+
+    public class  OnCreateExpenseSuccess{
+        private CreateExpenseResponse createExpenseResponse;
+
+        public OnCreateExpenseSuccess(CreateExpenseResponse createExpenseResponse){
+            this.createExpenseResponse = createExpenseResponse;
+        }
+        public CreateExpenseResponse getCreateExpenseResponse(){
+            return createExpenseResponse;
+        }
+    }
+
+    public class OnCreateExpenseFail{
+        private String error;
+
+        public OnCreateExpenseFail(String error){ this.error = error; }
+
+        public String getError(){ return error; }
+    }
+
 
 }

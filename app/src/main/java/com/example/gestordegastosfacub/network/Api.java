@@ -4,12 +4,15 @@ import com.example.gestordegastosfacub.models.Account;
 import com.example.gestordegastosfacub.models.Category;
 import com.example.gestordegastosfacub.models.Expense;
 import com.example.gestordegastosfacub.models.Provider;
+import com.example.gestordegastosfacub.network.requests.CreateExpenseRequest;
+import com.example.gestordegastosfacub.network.responses.CreateExpenseResponse;
 import com.example.gestordegastosfacub.network.responses.LoginResponse;
 
 import java.util.ArrayList;
 
 import io.reactivex.Single;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -35,6 +38,11 @@ public interface Api {
     @GET("/api/v1/providers")
     Single<ArrayList<Provider>> getProviders(
             @Query("categoId")  int categoryId
+    );
+
+    @POST("/api/v1/transactions")
+    Single<CreateExpenseResponse> createNewExpense(
+            @Body CreateExpenseRequest createExpenseRequest
     );
 
 }
