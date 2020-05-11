@@ -1,6 +1,7 @@
 package com.example.gestordegastosfacub.viewModels;
 
 import com.example.gestordegastosfacub.models.Provider;
+import com.example.gestordegastosfacub.repositories.NewExpenseRepository;
 
 import java.util.ArrayList;
 
@@ -9,17 +10,35 @@ import androidx.lifecycle.ViewModel;
 
 public class ProviderSelectorViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Provider>> providers = new MutableLiveData<>();
+    private MutableLiveData<NewExpenseRepository.OnGetProvidersFail> onGetProvidersFail = new MutableLiveData<>();
+    private NewExpenseRepository newExpenseRepository;
+
+    public MutableLiveData<NewExpenseRepository.OnGetProvidersFail> getOnGetProvidersFail() {
+        return onGetProvidersFail;
+    }
 
     public MutableLiveData<ArrayList<Provider>> getProviders() {
-        generateProviders();
         return providers;
     }
 
-    private void generateProviders() {
-        providers.setValue(new ArrayList<Provider>());
-        providers.getValue().add(new Provider("1","Proveedor 1"));
-        providers.getValue().add(new Provider("2","Proveedor 2"));
-        providers.getValue().add(new Provider("3","Proveedor 3"));
-        providers.getValue().add(new Provider("4","Proveedor 4"));
+    public NewExpenseRepository getNewExpenseRepository() {
+        if (newExpenseRepository ==  null){
+            newExpenseRepository = new NewExpenseRepository();
+            setupObservers();
+        }
+        return newExpenseRepository;
+    }
+
+    private void setupObservers() {
+        getNewExpenseRepository().getOnGetProvidersSuccessData().subscribe(onGetProvidersSuccess -> {
+            getProviders().setValue(onGetProvidersSuccess.getProviders());
+        });
+        getNewExpenseRepository().getOnGetProvidersFailData().subscribe(onGetProvidersFail -> {
+            getOnGetProvidersFail().setValue(onGetProvidersFail);
+        });
+    }
+
+    public void getProvidersFromServer(String categoryId) {
+        getNewExpenseRepository().getProviderFromServer(categoryId);
     }
 }

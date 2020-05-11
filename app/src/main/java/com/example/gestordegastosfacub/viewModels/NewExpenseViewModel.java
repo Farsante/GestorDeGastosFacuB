@@ -79,8 +79,9 @@ public class NewExpenseViewModel extends ViewModel {
     public void onNewExpensePressed(){
         getNewExpensePressed().setValue(true);
     }
+
     public void saveExpense(){
-        getNewExpenseRepository().saveExpenseInDatabase((getExpense().getValue()));
+        getNewExpenseRepository().saveExpenseInDatabase(getExpense().getValue());
     }
 }
 

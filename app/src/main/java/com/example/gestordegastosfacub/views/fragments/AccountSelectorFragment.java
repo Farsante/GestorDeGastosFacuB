@@ -22,6 +22,8 @@ import com.example.gestordegastosfacub.databinding.FragmentSelectorBinding;
 import com.example.gestordegastosfacub.models.Account;
 import com.example.gestordegastosfacub.viewModels.AccountSelectorViewModel;
 
+import java.util.ArrayList;
+
 public class AccountSelectorFragment extends Fragment {
     private FragmentSelectorBinding binding;
     private AccountSelectorViewModel viewModel;
@@ -63,11 +65,29 @@ public class AccountSelectorFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupRecycler();
+        viewModel.getAccountsFromServer();
+        binding.layoutOverlay.setVisibility(View.VISIBLE);
+        setupObservers();
     }
 
-    private void setupRecycler() {
-        adapter = new AccountSelectorAdapter(viewModel.getAccounts().getValue());
+    private void setupObservers() {
+        viewModel.getAccounts().observe(this, accounts -> {
+            setupRecycler(accounts);
+            if (accounts.isEmpty()){
+                binding.emptyListText.setText("No se encontraron cuentas disponibles");
+            }else {
+                binding.emptyListText.setText("");
+
+            }
+            binding.layoutOverlay.setVisibility(View.GONE);
+        });
+        viewModel.getOnGetAccountFail().observe(this,onGetAccountsFail -> {
+            binding.layoutOverlay.setVisibility(View.GONE);
+        });
+    }
+
+    private void setupRecycler(ArrayList<Account> accounts) {
+        adapter = new AccountSelectorAdapter(accounts);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         binding.recyclerSelector.setLayoutManager(linearLayoutManager);
         binding.recyclerSelector.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));

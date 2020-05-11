@@ -4,6 +4,9 @@ import com.example.gestordegastosfacub.helpers.SessionPersistence;
 import com.example.gestordegastosfacub.models.User;
 import com.example.gestordegastosfacub.network.RestClient;
 import com.example.gestordegastosfacub.network.responses.LoginResponse;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import io.reactivex.Emitter;
 import io.reactivex.Scheduler;
@@ -11,8 +14,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.HttpException;
 import retrofit2.Response;
 
 public class LoginRepository {
@@ -34,22 +39,6 @@ public class LoginRepository {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(makeLoginObserver());
-                /*.enqueue(new Callback<LoginResponse>() {
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if (response.isSuccessful()){
-                    saveUser(response.body().getUser());
-                    getOnLoginSuccess().onNext(new OnLoginSuccess(response.body()));
-                }else {
-                    getOnLoginFail().onNext(new OnLoginFail("ha ocurrido un error "));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                getOnLoginFail().onNext(new OnLoginFail("ha ocurrido un error, lo sentimos "));
-            }
-        });*/
     }
 
     public DisposableSingleObserver<LoginResponse> makeLoginObserver(){
@@ -62,7 +51,16 @@ public class LoginRepository {
 
             @Override
             public void onError(Throwable e) {
-                getOnLoginFail().onNext(new OnLoginFail("Ha ocurrido un error"));
+                if (e instanceof HttpException){
+                    ResponseBody body =  ((HttpException)e).response().errorBody();
+                    try {
+                        JSONObject jObjError = new JSONObject(body.string());
+                        LoginResponse loginResponse = new Gson().fromJson(jObjError.toString(),LoginResponse.class);
+                        getOnLoginFail().onNext(new OnLoginFail(loginResponse.getError()));
+                    }catch (Exception ex){
+                        getOnLoginFail().onNext(new OnLoginFail(ex.getMessage()));
+                    }
+                }
             }
         };
     }

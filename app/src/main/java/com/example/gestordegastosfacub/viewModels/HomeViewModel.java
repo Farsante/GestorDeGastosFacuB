@@ -15,8 +15,13 @@ public class HomeViewModel extends ViewModel {
     private MutableLiveData<String> userName = new MutableLiveData<>();
     private MutableLiveData<Boolean> butonNewExpense = new MutableLiveData<>();
     private HomeRepository homeRepository;
+    private MutableLiveData<Boolean> showOverlay = new MutableLiveData<>();
     private MutableLiveData<HomeRepository.OnGetExpensesFail>onGetExpensesFailData = new MutableLiveData<>();
 
+
+   public MutableLiveData<Boolean> getShowOverlay(){
+       return showOverlay;
+   }
 
     public MutableLiveData<HomeRepository.OnGetExpensesFail> getOnGetExpensesFailData() {
         return onGetExpensesFailData;
@@ -33,9 +38,11 @@ public class HomeViewModel extends ViewModel {
     private void setupObservers() {
         getHomeRepository().getOnGetExpensesSuccess().subscribe(onGetExpensesSuccess ->{
                 getExpenses().setValue(onGetExpensesSuccess.getExpenses());
+                getShowOverlay().setValue(false);
         });
         getHomeRepository().getOnGetExpensesFail().subscribe(onGetExpensesFail -> {
             getOnGetExpensesFailData().setValue(onGetExpensesFail);
+            getShowOverlay().setValue(false);
         });
     }
 
@@ -59,6 +66,7 @@ public class HomeViewModel extends ViewModel {
         getUserName().setValue("¡"+user.getName()+"!");    }
 
     public void getExpensesFromServer() {
+        getShowOverlay().setValue(true);
         getHomeRepository().getExpensesFromServer();
     }
 }

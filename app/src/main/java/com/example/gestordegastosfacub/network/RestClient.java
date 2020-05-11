@@ -1,13 +1,15 @@
 package com.example.gestordegastosfacub.network;
 
-import com.example.gestordegastosfacub.BuildConfig;
+
 import com.example.gestordegastosfacub.helpers.SessionPersistence;
-import com.example.gestordegastosfacub.models.Category;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import android.net.Uri;
 
 import java.util.concurrent.TimeUnit;
 
+
+import androidx.databinding.library.BuildConfig;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -45,10 +47,10 @@ public class RestClient {
             Request original = chain.request();
             String token = SessionPersistence.getUser() == null ? "" :
                     SessionPersistence.getUser().getAuthToken();
-            Request.Builder requesBuilder = original.newBuilder()
+            Request.Builder requestBuilder = original.newBuilder()
                 .header("Authorization",token)
                 .header("Content-Type","application/json");
-            return chain.proceed(requesBuilder.build());
+            return chain.proceed(requestBuilder.build());
         });
     }
 

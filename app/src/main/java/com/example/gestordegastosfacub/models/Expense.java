@@ -40,7 +40,7 @@ public class Expense implements Serializable {
     }
 
     public String getAmount() {
-        return "$"+amount;
+        return "$ "+amount;
     }
 
     public void setAmount(String amount) {
@@ -72,7 +72,8 @@ public class Expense implements Serializable {
     }
 
     public String getCreatedAt() {
-        return DateUtils.stringToString(createdAt,DateUtils.SERVER_DATE,DateUtils.FULL_DATE);
+        return createdAt;
+        /*return  DateUtils.stringToString(createdAt,DateUtils.SERVER_DATE,DateUtils.FULL_DATE);*/
     }
 
     public void setCreatedAt(String createdAt) {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout >
     <data>
+        <import type="android.view.View"/>
         <variable
             name="homeViewModel"
             type="com.example.gestordegastosfacub.viewModels.HomeViewModel" />
@@ -52,6 +53,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             />
+
+            <include
+                android:id="@+id/overlay"
+                layout="@layout/layout_overlay"
+                android:visibility="@{homeViewModel.showOverlay?View.VISIBLE:View.GONE}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
