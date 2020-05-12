@@ -10,12 +10,16 @@ import com.example.gestordegastosfacub.R;
 import com.example.gestordegastosfacub.adapters.CategorySelectorAdapter;
 import com.example.gestordegastosfacub.databinding.FragmentSelectorBinding;
 import com.example.gestordegastosfacub.models.Category;
+import com.example.gestordegastosfacub.repositories.NewExpenseRepository;
 import com.example.gestordegastosfacub.viewModels.CategorySelectorViewModel;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -59,11 +63,32 @@ public class CategorySelectorFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupRecycler();
+        viewModel.getCategoriesFromServer();
+        binding.layoutOverlay.setVisibility(View.VISIBLE);
+        setupObservers();
+    }
+    private void setupObservers(){
+        viewModel.getCategories().observe(this, categories -> {
+            setupRecycler(categories);
+            if (categories.isEmpty()){
+                binding.emptyListText.setText("No se encontraron categorias ");
+            }else {
+                binding.emptyListText.setText("");
+            }
+            binding.layoutOverlay.setVisibility(View.VISIBLE);
+        });
+        viewModel.getOnGetCategoryFail().observe(this, new Observer<NewExpenseRepository.OnGetCategoryFail>() {
+            @Override
+            public void onChanged(NewExpenseRepository.OnGetCategoryFail onGetCategoryFail) {
+                binding.layoutOverlay.setVisibility(View.GONE);
+            }
+        });
+
+
     }
 
-    private void setupRecycler() {
-        adapter = new CategorySelectorAdapter(viewModel.getCategories().getValue());
+    private void setupRecycler(ArrayList<Category> categories) {
+        adapter = new CategorySelectorAdapter(categories);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL,false);
         binding.recyclerSelector.setLayoutManager(linearLayoutManager);
         binding.recyclerSelector.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));

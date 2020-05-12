@@ -61,8 +61,6 @@ public class ProviderSelectorFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        /*Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_selector, container, false);*/
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_selector,container,false);
         viewModel = new ViewModelProvider(this).get(ProviderSelectorViewModel.class);
         return binding.getRoot();

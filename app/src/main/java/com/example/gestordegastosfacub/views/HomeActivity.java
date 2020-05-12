@@ -35,15 +35,11 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_home);
-        //user = (User) getIntent().getExtras().getSerializable("user");
-        //SessionPersistence.saveUser(user);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_home);
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding.setHomeViewModel(viewModel);
         binding.setLifecycleOwner(this);
         viewModel.setupUserInfo();
-        //setupRecyclerView();
         setupObservers();
 
     }
